@@ -118,16 +118,17 @@ export class NetvisorCustomerMethod extends NetvisorMethod {
     }
 
     const customerContactDetails: any = {};
+    //console.log(_customer.CustomerContactDetails)
     for (const [key, value] of Object.entries(_customer.CustomerContactDetails[0])) {
       const newValue: any = value;
       customerContactDetails[key] = newValue[0];
     }
 
-    const customerContactPersons: any = {};
-    for (const [key, value] of Object.entries(_customer.CustomerContactPersons[0])) {
-      const newValue: any = value;
-      customerContactPersons[key] = newValue[0];
-    }
+    const customerContactPersons: any = [];
+    _customer.CustomerContactPersons[0].CustomerContactPerson.forEach((person: any) => {
+      customerContactPersons.push(person)
+    });
+    
 
     const customerAdditionalInformation: any = {};
     for (const [key, value] of Object.entries(_customer.CustomerAdditionalInformation[0])) {

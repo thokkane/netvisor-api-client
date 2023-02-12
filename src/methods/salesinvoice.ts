@@ -14,11 +14,12 @@ export class NetvisorSalesMethod extends NetvisorMethod {
   /**
    * Save one invoice as a invoice object
    * @param dataset as ISalesInvoice
+   * * @param params as parameters with {method: add}
+   * if editing product {method: add/edit, id: netvisorkey}
    */
-  async saveInvoiceByDataSet(dataset: ISalesInvoice) {
+  async saveInvoiceByDataSet(dataset: ISalesInvoice,  params: any) {
     const xml = js2xmlparser.parse('Root', dataset);
-
-    return await this._client.post(this._endpointUri, xml.replace("<?xml version='1.0'?>", ''));
+    return await this._client.post(this._endpointUri, xml.replace("<?xml version='1.0'?>",''),params);
   }
 
   /**

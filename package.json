@@ -1,5 +1,5 @@
 {
-  "name": "@rantalainen/netvisor-api-client",
+  "name": "netvisor-api-client-tomi",
   "version": "0.14.0",
   "publishConfig": {
     "access": "public"
@@ -9,10 +9,6 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rantalainen/netvisor-api-client.git"
   },
   "author": "",
   "license": "MIT",

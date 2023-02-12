@@ -1,6 +1,8 @@
 import got, { Got, GotReturn } from 'got';
 import { NetvisorAccountingMethod } from './methods/accounting';
 import { NetvisorCustomerMethod } from './methods/customers';
+import { NetvisorContactPersonMethod } from './methods/contactpersons';
+import { NetvisorSalespersonMethod } from './methods/salespersons';
 import { NetvisorPaymentMethod } from './methods/payments';
 import { NetvisorSalesMethod } from './methods/salesinvoice';
 import { NetvisorBudgetMethod } from './methods/budget';
@@ -58,6 +60,8 @@ export class NetvisorApiClient {
   readonly accounting: NetvisorAccountingMethod;
   readonly budget: NetvisorBudgetMethod;
   readonly customers: NetvisorCustomerMethod;
+  readonly contactpersons: NetvisorContactPersonMethod;
+  readonly salespersons: NetvisorSalespersonMethod;
   readonly payments: NetvisorPaymentMethod;
   readonly product: NetvisorProductMethod;
   readonly purchase: NetvisorPurchaseInvoiceMethod;
@@ -104,6 +108,8 @@ export class NetvisorApiClient {
     this.accounting = new NetvisorAccountingMethod(this);
     this.budget = new NetvisorBudgetMethod(this);
     this.customers = new NetvisorCustomerMethod(this);
+    this.contactpersons = new NetvisorContactPersonMethod(this);
+    this.salespersons = new NetvisorSalespersonMethod(this);
     this.payments = new NetvisorPaymentMethod(this);
     this.product = new NetvisorProductMethod(this);
     this.purchase = new NetvisorPurchaseInvoiceMethod(this);
@@ -161,7 +167,7 @@ export class NetvisorApiClient {
 
   async post(endpointUri: string, body: string, params?: any): Promise<string> {
     const url = this._generateUrl(endpointUri);
-
+    console.log(url)
     const headers = this._generateHeaders(url, params);
 
     const request: any = await got.post(url, {
