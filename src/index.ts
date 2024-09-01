@@ -1,3 +1,4 @@
+// @ts-nocheck
 import got, { Got, GotReturn } from 'got';
 import { NetvisorAccountingMethod } from './methods/accounting';
 import { NetvisorCustomerMethod } from './methods/customers';
@@ -167,7 +168,7 @@ export class NetvisorApiClient {
 
   async post(endpointUri: string, body: string, params?: any): Promise<string> {
     const url = this._generateUrl(endpointUri);
-    console.log(url)
+    //console.log(url)
     const headers = this._generateHeaders(url, params);
 
     const request: any = await got.post(url, {

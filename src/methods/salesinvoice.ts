@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NetvisorApiClient } from '..';
 import { NetvisorMethod } from './_method';
 import * as xml2js from 'xml2js';
@@ -67,7 +68,7 @@ export class NetvisorSalesMethod extends NetvisorMethod {
     const salesInvoices = [];
 
     const resource = params.listtype == 'preinvoice' ? 'getorder.nv' : 'getsalesinvoice.nv';
-
+    
     do {
       const newArr = netvisorKeys.slice(offset, limit + offset);
       params['netvisorkeylist'] = newArr.join(',');
@@ -75,7 +76,7 @@ export class NetvisorSalesMethod extends NetvisorMethod {
       const salesInvoicesRaw = await this._client.get(resource, params);
 
       var parser = new xml2js.Parser();
-
+      
       const salesInvoicesPart: Array<any> = await new Promise(async (resolve, reject) => {
         parser.parseString(salesInvoicesRaw, (error: string, xmlResult: any) => {
           if (error) return reject(error);
@@ -116,6 +117,8 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
       }
 
+      //console.log(item)
+
       const invoice: any = {
         netvisorKey: item.SalesInvoiceNetvisorKey[0],
         salesInvoiceNumber: item.SalesInvoiceNumber[0],
@@ -130,6 +133,7 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         currencyRate: currencyRate,
         seller: item.SellerIdentifier[0],
         invoiceStatus: item.InvoiceStatus[0],
+        //invoiceSubStatus: item.InvoiceStatus['$'].substatus[0],
         salesInvoiceFreeTextBeforeLines: item.SalesInvoiceFreeTextBeforeLines[0],
         salesInvoiceFreeTextAfterLines: item.SalesInvoiceFreeTextAfterLines[0],
         salesInvoiceOurReference: item.SalesInvoiceOurReference[0],
@@ -147,13 +151,17 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         deliveryAddressPostnumber: item.DeliveryAddressPostnumber[0],
         deliveryAddressTown: item.DeliveryAddressTown[0],
         deliveryCountry: item.DeliveryAddressCountryCode[0],
-        invoiceLines: invoiceRows
+        invoiceLines: invoiceRows,
+        invoiceNetvisorKeys:[],
+        invoiceNumbers:[]
       };
-
       const documents = !item.Documents ? '' : item.Documents[0];
       for (const [key, value] of Object.entries(documents)) {
+        //console.log(key)
+        //console.log(value)
         if (key === 'SalesInvoice') {
-          invoice['invoiceNumber'] = documents.SalesInvoice[0].InvoiceNumber[0];
+          invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
+          invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
         }
         if (key === 'SalesOrder') {
           invoice['orderNumber'] = documents.SalesOrder[0].OrderNumber[0];

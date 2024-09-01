@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NetvisorApiClient } from '..';
 import { NetvisorMethod } from './_method';
 import * as js2xmlparser from 'js2xmlparser';

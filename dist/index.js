@@ -63,6 +63,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NetvisorApiClient = void 0;
+// @ts-nocheck
 var got_1 = __importDefault(require("got"));
 var accounting_1 = require("./methods/accounting");
 var customers_1 = require("./methods/customers");
@@ -166,7 +167,6 @@ var NetvisorApiClient = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         url = this._generateUrl(endpointUri);
-                        console.log(url);
                         headers = this._generateHeaders(url, params);
                         return [4 /*yield*/, got_1.default.post(url, {
                                 body: body,

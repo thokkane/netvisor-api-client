@@ -243,6 +243,7 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 currencyRate: currencyRate,
                                 seller: item.SellerIdentifier[0],
                                 invoiceStatus: item.InvoiceStatus[0],
+                                //invoiceSubStatus: item.InvoiceStatus['$'].substatus[0],
                                 salesInvoiceFreeTextBeforeLines: item.SalesInvoiceFreeTextBeforeLines[0],
                                 salesInvoiceFreeTextAfterLines: item.SalesInvoiceFreeTextAfterLines[0],
                                 salesInvoiceOurReference: item.SalesInvoiceOurReference[0],
@@ -260,13 +261,18 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 deliveryAddressPostnumber: item.DeliveryAddressPostnumber[0],
                                 deliveryAddressTown: item.DeliveryAddressTown[0],
                                 deliveryCountry: item.DeliveryAddressCountryCode[0],
-                                invoiceLines: invoiceRows
+                                invoiceLines: invoiceRows,
+                                invoiceNetvisorKeys: [],
+                                invoiceNumbers: []
                             };
                             documents = !item.Documents ? '' : item.Documents[0];
                             for (_e = 0, _f = Object.entries(documents); _e < _f.length; _e++) {
                                 _g = _f[_e], key = _g[0], value = _g[1];
+                                //console.log(key)
+                                //console.log(value)
                                 if (key === 'SalesInvoice') {
-                                    invoice['invoiceNumber'] = documents.SalesInvoice[0].InvoiceNumber[0];
+                                    invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
+                                    invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
                                 }
                                 if (key === 'SalesOrder') {
                                     invoice['orderNumber'] = documents.SalesOrder[0].OrderNumber[0];
