@@ -155,10 +155,10 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
     };
     NetvisorSalesMethod.prototype.getSalesInvoicesByNetvisorKeyList = function (netvisorKeys, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var limit, offset, salesInvoices, resource, _loop_1, this_1, parser, salesInvoiceList, _i, salesInvoices_1, item, invoiceRows, _a, invoiceRows_1, row, _b, _c, _d, key, value, currency, currencyRate, invoice, documents, _e, _f, _g, key, value;
+            var limit, offset, salesInvoices, resource, _loop_1, this_1, parser, salesInvoiceList, _i, salesInvoices_1, item, invoiceRows, _a, invoiceRows_1, row, _b, _c, _d, key, value, currency, currencyRate, invoice, documents, _e, _f, _g, key, value, _h, _j, si;
             var _this = this;
-            return __generator(this, function (_h) {
-                switch (_h.label) {
+            return __generator(this, function (_k) {
+                switch (_k.label) {
                     case 0:
                         limit = 100;
                         offset = 0;
@@ -166,14 +166,14 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                         resource = params.listtype == 'preinvoice' ? 'getorder.nv' : 'getsalesinvoice.nv';
                         _loop_1 = function () {
                             var newArr, salesInvoicesRaw, salesInvoicesPart;
-                            return __generator(this, function (_j) {
-                                switch (_j.label) {
+                            return __generator(this, function (_l) {
+                                switch (_l.label) {
                                     case 0:
                                         newArr = netvisorKeys.slice(offset, limit + offset);
                                         params['netvisorkeylist'] = newArr.join(',');
                                         return [4 /*yield*/, this_1._client.get(resource, params)];
                                     case 1:
-                                        salesInvoicesRaw = _j.sent();
+                                        salesInvoicesRaw = _l.sent();
                                         parser = new xml2js.Parser();
                                         return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                                 return __generator(this, function (_a) {
@@ -193,7 +193,7 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                                 });
                                             }); })];
                                     case 2:
-                                        salesInvoicesPart = _j.sent();
+                                        salesInvoicesPart = _l.sent();
                                         salesInvoices.push.apply(salesInvoices, salesInvoicesPart);
                                         offset = offset + limit;
                                         return [2 /*return*/];
@@ -201,14 +201,14 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                             });
                         };
                         this_1 = this;
-                        _h.label = 1;
+                        _k.label = 1;
                     case 1: return [5 /*yield**/, _loop_1()];
                     case 2:
-                        _h.sent();
-                        _h.label = 3;
+                        _k.sent();
+                        _k.label = 3;
                     case 3:
                         if (offset < netvisorKeys.length) return [3 /*break*/, 1];
-                        _h.label = 4;
+                        _k.label = 4;
                     case 4:
                         salesInvoiceList = [];
                         for (_i = 0, salesInvoices_1 = salesInvoices; _i < salesInvoices_1.length; _i++) {
@@ -266,13 +266,20 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 invoiceNumbers: []
                             };
                             documents = !item.Documents ? '' : item.Documents[0];
+                            //console.log(documents)
                             for (_e = 0, _f = Object.entries(documents); _e < _f.length; _e++) {
                                 _g = _f[_e], key = _g[0], value = _g[1];
                                 //console.log(key)
                                 //console.log(value)
                                 if (key === 'SalesInvoice') {
-                                    invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
-                                    invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
+                                    for (_h = 0, _j = documents.SalesInvoice; _h < _j.length; _h++) {
+                                        si = _j[_h];
+                                        console.log(si);
+                                        invoice['invoiceNumbers'].push(si.InvoiceNumber[0]);
+                                        invoice['invoiceNetvisorKeys'].push(si.NetvisorKey[0]);
+                                        //invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
+                                        //invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
+                                    }
                                 }
                                 if (key === 'SalesOrder') {
                                     invoice['orderNumber'] = documents.SalesOrder[0].OrderNumber[0];

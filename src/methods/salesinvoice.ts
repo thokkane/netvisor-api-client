@@ -156,12 +156,19 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         invoiceNumbers:[]
       };
       const documents = !item.Documents ? '' : item.Documents[0];
+      //console.log(documents)
       for (const [key, value] of Object.entries(documents)) {
         //console.log(key)
         //console.log(value)
         if (key === 'SalesInvoice') {
-          invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
-          invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
+          for(const si of documents.SalesInvoice){
+            console.log(si)
+            invoice['invoiceNumbers'].push(si.InvoiceNumber[0]);
+            invoice['invoiceNetvisorKeys'].push(si.NetvisorKey[0]);
+            //invoice['invoiceNumbers'] = documents.SalesInvoice[0].InvoiceNumber[0];
+            //invoice['invoiceNetvisorKeys'].push(documents.SalesInvoice[0].NetvisorKey[0]);
+          }
+          
         }
         if (key === 'SalesOrder') {
           invoice['orderNumber'] = documents.SalesOrder[0].OrderNumber[0];
