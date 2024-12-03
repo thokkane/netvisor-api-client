@@ -3,7 +3,7 @@ import got, { Got, GotReturn } from 'got';
 import { NetvisorAccountingMethod } from './methods/accounting';
 import { NetvisorCustomerMethod } from './methods/customers';
 import { NetvisorContactPersonMethod } from './methods/contactpersons';
-import { NetvisorInvoiceOrderMethod } from './methods/invoiceorder';
+import { NetvisorInvoiceOrderMethod } from './methods/invoiceOrder';
 import { NetvisorSalespersonMethod } from './methods/salespersons';
 import { NetvisorPaymentMethod } from './methods/payments';
 import { NetvisorSalesMethod } from './methods/salesinvoice';
