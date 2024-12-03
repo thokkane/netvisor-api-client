@@ -3,6 +3,7 @@ import got, { Got, GotReturn } from 'got';
 import { NetvisorAccountingMethod } from './methods/accounting';
 import { NetvisorCustomerMethod } from './methods/customers';
 import { NetvisorContactPersonMethod } from './methods/contactpersons';
+import { NetvisorInvoiceOrderMethod } from './methods/invoiceorder';
 import { NetvisorSalespersonMethod } from './methods/salespersons';
 import { NetvisorPaymentMethod } from './methods/payments';
 import { NetvisorSalesMethod } from './methods/salesinvoice';
@@ -18,6 +19,7 @@ import crypto from 'crypto';
 import * as xml2js from 'xml2js';
 import { HttpsAgent } from 'agentkeepalive';
 import CacheableLookup from 'cacheable-lookup';
+
 
 const httpsAgent = new HttpsAgent();
 const cacheableLookup = new CacheableLookup();
@@ -63,6 +65,7 @@ export class NetvisorApiClient {
   readonly customers: NetvisorCustomerMethod;
   readonly contactpersons: NetvisorContactPersonMethod;
   readonly salespersons: NetvisorSalespersonMethod;
+  readonly invoiceorder: NetvisorInvoiceOrderMethod;
   readonly payments: NetvisorPaymentMethod;
   readonly product: NetvisorProductMethod;
   readonly purchase: NetvisorPurchaseInvoiceMethod;
@@ -111,6 +114,7 @@ export class NetvisorApiClient {
     this.customers = new NetvisorCustomerMethod(this);
     this.contactpersons = new NetvisorContactPersonMethod(this);
     this.salespersons = new NetvisorSalespersonMethod(this);
+    this.invoiceorder = new NetvisorInvoiceOrderMethod(this)
     this.payments = new NetvisorPaymentMethod(this);
     this.product = new NetvisorProductMethod(this);
     this.purchase = new NetvisorPurchaseInvoiceMethod(this);

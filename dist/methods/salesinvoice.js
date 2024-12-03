@@ -229,6 +229,7 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 currency = item.SalesInvoiceAmount[0].$.iso4217currencycode;
                                 currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
                             }
+                            console.log("HELLO");
                             invoice = {
                                 netvisorKey: item.SalesInvoiceNetvisorKey[0],
                                 salesInvoiceNumber: item.SalesInvoiceNumber[0],
@@ -245,6 +246,7 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 invoiceStatus: item.InvoiceStatus[0],
                                 //invoiceSubStatus: item.InvoiceStatus['$'].substatus[0],
                                 salesInvoiceFreeTextBeforeLines: item.SalesInvoiceFreeTextBeforeLines[0],
+                                lastSentInvoicePDFBase64Data: item.LastSentInvoicePDFBase64Data && item.LastSentInvoicePDFBase64Data[0] ? item.LastSentInvoicePDFBase64Data[0] : '',
                                 salesInvoiceFreeTextAfterLines: item.SalesInvoiceFreeTextAfterLines[0],
                                 salesInvoiceOurReference: item.SalesInvoiceOurReference[0],
                                 salesInvoiceYourReference: item.SalesInvoiceYourReference[0],

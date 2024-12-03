@@ -1,6 +1,7 @@
 import { NetvisorAccountingMethod } from './methods/accounting';
 import { NetvisorCustomerMethod } from './methods/customers';
 import { NetvisorContactPersonMethod } from './methods/contactpersons';
+import { NetvisorInvoiceOrderMethod } from './methods/invoiceorder';
 import { NetvisorSalespersonMethod } from './methods/salespersons';
 import { NetvisorPaymentMethod } from './methods/payments';
 import { NetvisorSalesMethod } from './methods/salesinvoice';
@@ -47,6 +48,7 @@ export declare class NetvisorApiClient {
     readonly customers: NetvisorCustomerMethod;
     readonly contactpersons: NetvisorContactPersonMethod;
     readonly salespersons: NetvisorSalespersonMethod;
+    readonly invoiceorder: NetvisorInvoiceOrderMethod;
     readonly payments: NetvisorPaymentMethod;
     readonly product: NetvisorProductMethod;
     readonly purchase: NetvisorPurchaseInvoiceMethod;
