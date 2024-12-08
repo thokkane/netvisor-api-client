@@ -16,6 +16,7 @@ export declare class NetvisorSalesMethod extends NetvisorMethod {
      * and { listtype: 'preinvoice' } for orders
      */
     getSales(params: any): Promise<any[]>;
+    deleteSalesInvoice(params: any): Promise<string>;
     getSalesInvoicesByNetvisorKeyList(netvisorKeys: string[] | number[], params: any): Promise<any[]>;
     /**
      * Save one salespayment as a payment object

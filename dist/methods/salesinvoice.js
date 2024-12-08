@@ -153,6 +153,20 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
             });
         });
     };
+    NetvisorSalesMethod.prototype.deleteSalesInvoice = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var resource;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        resource = 'deletesalesinvoice.nv';
+                        console.log(params);
+                        return [4 /*yield*/, this._client.get(resource, params)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     NetvisorSalesMethod.prototype.getSalesInvoicesByNetvisorKeyList = function (netvisorKeys, params) {
         return __awaiter(this, void 0, void 0, function () {
             var limit, offset, salesInvoices, resource, _loop_1, this_1, parser, salesInvoiceList, _i, salesInvoices_1, item, invoiceRows, _a, invoiceRows_1, row, _b, _c, _d, key, value, currency, currencyRate, invoice, documents, _e, _f, _g, key, value, _h, _j, si;
@@ -229,7 +243,6 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 currency = item.SalesInvoiceAmount[0].$.iso4217currencycode;
                                 currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
                             }
-                            console.log("HELLO");
                             invoice = {
                                 netvisorKey: item.SalesInvoiceNetvisorKey[0],
                                 salesInvoiceNumber: item.SalesInvoiceNumber[0],

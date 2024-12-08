@@ -61,6 +61,12 @@ export class NetvisorSalesMethod extends NetvisorMethod {
     return await this.getSalesInvoicesByNetvisorKeyList(salesInvoiceKeys, params);
   }
 
+  async deleteSalesInvoice(params: any) {
+    var resource = 'deletesalesinvoice.nv';
+    console.log(params)
+    return await this._client.get(resource, params);
+  }
+
   async getSalesInvoicesByNetvisorKeyList(netvisorKeys: string[] | number[], params: any) {
     // If salesList contains more than 100 -> must split salesinvoices fetch
     const limit = 100;
@@ -116,7 +122,7 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         currency = item.SalesInvoiceAmount[0].$.iso4217currencycode;
         currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
       }
-      console.log("HELLO")
+      //console.log("HELLO")
       //console.log(item)
       //if(item.lastSentInvoicePDFBase64Data) console.log(item.lastSentInvoicePDFBase64Data[0])
 
