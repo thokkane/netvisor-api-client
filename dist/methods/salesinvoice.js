@@ -243,7 +243,6 @@ var NetvisorSalesMethod = /** @class */ (function (_super) {
                                 currency = item.SalesInvoiceAmount[0].$.iso4217currencycode;
                                 currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
                             }
-                            console.log("HELLO-UUSI");
                             invoice = {
                                 netvisorKey: item.SalesInvoiceNetvisorKey[0],
                                 salesInvoiceNumber: item.SalesInvoiceNumber[0],

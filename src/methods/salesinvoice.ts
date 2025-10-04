@@ -122,7 +122,7 @@ export class NetvisorSalesMethod extends NetvisorMethod {
         currency = item.SalesInvoiceAmount[0].$.iso4217currencycode;
         currencyRate = item.SalesInvoiceAmount[0].$.currencyrate;
       }
-      console.log("HELLO-UUSI")
+      //console.log("HELLO-UUSI")
       //console.log(item)
       //if(item.lastSentInvoicePDFBase64Data) console.log(item.lastSentInvoicePDFBase64Data[0])
 
