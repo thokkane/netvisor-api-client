@@ -27,15 +27,17 @@ export interface INetvisorApiClientOptions {
     timeout?: number;
     dnsCache?: CacheableLookup | boolean;
 }
-export interface INetvisorRequestHeaders {
+export interface NetvisorRequestHeaders {
     [key: string]: any;
     'X-Netvisor-Authentication-Sender': string;
     'X-Netvisor-Authentication-CustomerId': string;
     'X-Netvisor-Authentication-PartnerId': string;
     'X-Netvisor-Authentication-Timestamp': string;
+    'X-Netvisor-Authentication-TimestampUnix': string | number;
     'X-Netvisor-Authentication-TransactionId': string;
-    'X-Netvisor-Interface-Language': string | undefined;
+    'X-Netvisor-Interface-Language'?: string;
     'X-Netvisor-Organisation-ID': string;
+    'X-Netvisor-Authentication-UseHTTPResponseStatusCodes'?: '1';
     'X-Netvisor-Authentication-MAC'?: string;
     'X-Netvisor-Authentication-MACHashCalculationAlgorithm': string;
     'Content-Type'?: string;
@@ -58,8 +60,8 @@ export declare class NetvisorApiClient {
     readonly tripexpense: NetvisorTripexpenseMethod;
     readonly vendors: NetvisorVendorMethod;
     constructor(options: INetvisorApiClientOptions);
-    _generateHeaderMAC(url: string, headers: INetvisorRequestHeaders): string;
-    _generateHeaders(url: string, params?: any): INetvisorRequestHeaders;
+    _generateHeaderMAC(url: string, headers: NetvisorRequestHeaders): string;
+    _generateHeaders(url: string, params?: any): NetvisorRequestHeaders;
     _generateUrl(endpointUri: string): string;
     post(endpointUri: string, body: string, params?: any): Promise<string>;
     get(endpointUri: string, params?: any): Promise<string>;

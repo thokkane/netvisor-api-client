@@ -42,7 +42,7 @@ export interface INetvisorApiClientOptions {
   dnsCache?: CacheableLookup | boolean;
 }
 
-export interface INetvisorRequestHeaders {
+/* export interface INetvisorRequestHeaders {
   [key: string]: any;
 
   'X-Netvisor-Authentication-Sender': string;
@@ -52,6 +52,23 @@ export interface INetvisorRequestHeaders {
   'X-Netvisor-Authentication-TransactionId': string;
   'X-Netvisor-Interface-Language': string | undefined;
   'X-Netvisor-Organisation-ID': string;
+  'X-Netvisor-Authentication-MAC'?: string;
+  'X-Netvisor-Authentication-MACHashCalculationAlgorithm': string;
+  'Content-Type'?: string;
+} */
+
+export interface NetvisorRequestHeaders {
+  [key: string]: any;
+
+  'X-Netvisor-Authentication-Sender': string;
+  'X-Netvisor-Authentication-CustomerId': string;
+  'X-Netvisor-Authentication-PartnerId': string;
+  'X-Netvisor-Authentication-Timestamp': string;
+  'X-Netvisor-Authentication-TimestampUnix': string | number;
+  'X-Netvisor-Authentication-TransactionId': string;
+  'X-Netvisor-Interface-Language'?: string;
+  'X-Netvisor-Organisation-ID': string;
+  'X-Netvisor-Authentication-UseHTTPResponseStatusCodes'?: '1';
   'X-Netvisor-Authentication-MAC'?: string;
   'X-Netvisor-Authentication-MACHashCalculationAlgorithm': string;
   'Content-Type'?: string;
@@ -133,15 +150,15 @@ export class NetvisorApiClient {
     }
   }
 
-  _generateHeaderMAC(url: string, headers: INetvisorRequestHeaders): string {
+  /* _generateHeaderMAC(url: string, headers: INetvisorRequestHeaders): string {
     return crypto
       .createHash('sha256')
       .update(
         `${url}&${headers['X-Netvisor-Authentication-Sender']}&${headers['X-Netvisor-Authentication-CustomerId']}&${headers['X-Netvisor-Authentication-Timestamp']}&${headers['X-Netvisor-Interface-Language']}&${headers['X-Netvisor-Organisation-ID']}&${headers['X-Netvisor-Authentication-TransactionId']}&${this.options.customerKey}&${this.options.partnerKey}`
       )
       .digest('hex');
-  }
-
+  } 
+  
   _generateHeaders(url: string, params?: any): INetvisorRequestHeaders {
     const headers: INetvisorRequestHeaders = {
       'X-Netvisor-Authentication-Sender': this.options.integrationName,
@@ -166,6 +183,58 @@ export class NetvisorApiClient {
 
     return headers;
   }
+  
+  */
+
+
+
+  _generateHeaderMAC(url: string, headers: NetvisorRequestHeaders): string {
+    const key = this.options.customerKey + '&' + this.options.partnerKey;
+    const message = [
+      url,
+      headers['X-Netvisor-Authentication-Sender'],
+      headers['X-Netvisor-Authentication-CustomerId'],
+      headers['X-Netvisor-Authentication-Timestamp'],
+      headers['X-Netvisor-Interface-Language'],
+      headers['X-Netvisor-Organisation-ID'],
+      headers['X-Netvisor-Authentication-TransactionId'],
+      headers['X-Netvisor-Authentication-TimestampUnix'],
+      this.options.customerKey,
+      this.options.partnerKey
+    ].join('&');
+
+    return crypto.createHmac('sha256', Buffer.from(key, 'latin1')).update(Buffer.from(message, 'latin1')).digest('hex');
+  }
+
+
+   _generateHeaders(url: string, params?: any): NetvisorRequestHeaders {
+    const headers: NetvisorRequestHeaders = {
+      'Content-Type': 'text/plain',
+      'X-Netvisor-Authentication-Sender': this.options.integrationName,
+      'X-Netvisor-Authentication-CustomerId': this.options.customerId,
+      'X-Netvisor-Authentication-PartnerId': this.options.partnerId,
+      'X-Netvisor-Authentication-Timestamp': new Date().toISOString().replace('T', ' ').replace('Z', ''),
+      'X-Netvisor-Authentication-TimestampUnix': Math.floor(Date.now() / 1000).toString(),
+      'X-Netvisor-Authentication-TransactionId': Date.now().toString() + crypto.randomBytes(32).toString('hex').substring(0, 16),
+      'X-Netvisor-Interface-Language': this.options.language,
+      'X-Netvisor-Organisation-ID': this.options.organizationId,
+      'X-Netvisor-Authentication-UseHTTPResponseStatusCodes': '1',
+      'X-Netvisor-Authentication-MACHashCalculationAlgorithm': 'HMACSHA256'
+    };
+
+    if (params) {
+      const queryString = Object.keys(params)
+        .map((key) => key + '=' + params[key])
+        .join('&');
+      url = `${url}?${queryString}`;
+    }
+
+    headers['X-Netvisor-Authentication-MAC'] = this._generateHeaderMAC(url, headers);
+
+    return headers;
+  }
+
+  
 
   _generateUrl(endpointUri: string): string {
     return new URL(endpointUri, this.options.baseUri).href;

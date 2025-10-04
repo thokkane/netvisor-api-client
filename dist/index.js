@@ -80,7 +80,6 @@ var purchaseinvoice_1 = require("./methods/purchaseinvoice");
 var workday_1 = require("./methods/workday");
 var employee_1 = require("./methods/employee");
 var tripexpense_1 = require("./methods/tripexpense");
-var moment_1 = __importDefault(require("moment"));
 var crypto_1 = __importDefault(require("crypto"));
 var xml2js = __importStar(require("xml2js"));
 var agentkeepalive_1 = require("agentkeepalive");
@@ -133,23 +132,70 @@ var NetvisorApiClient = /** @class */ (function () {
             this.options.dnsCache = cacheableLookup;
         }
     }
+    /* _generateHeaderMAC(url: string, headers: INetvisorRequestHeaders): string {
+      return crypto
+        .createHash('sha256')
+        .update(
+          `${url}&${headers['X-Netvisor-Authentication-Sender']}&${headers['X-Netvisor-Authentication-CustomerId']}&${headers['X-Netvisor-Authentication-Timestamp']}&${headers['X-Netvisor-Interface-Language']}&${headers['X-Netvisor-Organisation-ID']}&${headers['X-Netvisor-Authentication-TransactionId']}&${this.options.customerKey}&${this.options.partnerKey}`
+        )
+        .digest('hex');
+    }
+    
+    _generateHeaders(url: string, params?: any): INetvisorRequestHeaders {
+      const headers: INetvisorRequestHeaders = {
+        'X-Netvisor-Authentication-Sender': this.options.integrationName,
+        'X-Netvisor-Authentication-CustomerId': this.options.customerId,
+        'X-Netvisor-Authentication-PartnerId': this.options.partnerId,
+        'X-Netvisor-Authentication-Timestamp': moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+        'X-Netvisor-Authentication-TransactionId': crypto.randomBytes(32).toString('hex').substring(0, 16),
+        'X-Netvisor-Interface-Language': this.options.language,
+        'X-Netvisor-Organisation-ID': this.options.organizationId,
+        'X-Netvisor-Authentication-MACHashCalculationAlgorithm': 'SHA256',
+        'Content-Type': 'text/xml'
+      };
+  
+      if (params) {
+        const queryString = Object.keys(params)
+          .map((key) => key + '=' + params[key])
+          .join('&');
+        url = `${url}?${queryString}`;
+      }
+  
+      headers['X-Netvisor-Authentication-MAC'] = this._generateHeaderMAC(url, headers);
+  
+      return headers;
+    }
+    
+    */
     NetvisorApiClient.prototype._generateHeaderMAC = function (url, headers) {
-        return crypto_1.default
-            .createHash('sha256')
-            .update("".concat(url, "&").concat(headers['X-Netvisor-Authentication-Sender'], "&").concat(headers['X-Netvisor-Authentication-CustomerId'], "&").concat(headers['X-Netvisor-Authentication-Timestamp'], "&").concat(headers['X-Netvisor-Interface-Language'], "&").concat(headers['X-Netvisor-Organisation-ID'], "&").concat(headers['X-Netvisor-Authentication-TransactionId'], "&").concat(this.options.customerKey, "&").concat(this.options.partnerKey))
-            .digest('hex');
+        var key = this.options.customerKey + '&' + this.options.partnerKey;
+        var message = [
+            url,
+            headers['X-Netvisor-Authentication-Sender'],
+            headers['X-Netvisor-Authentication-CustomerId'],
+            headers['X-Netvisor-Authentication-Timestamp'],
+            headers['X-Netvisor-Interface-Language'],
+            headers['X-Netvisor-Organisation-ID'],
+            headers['X-Netvisor-Authentication-TransactionId'],
+            headers['X-Netvisor-Authentication-TimestampUnix'],
+            this.options.customerKey,
+            this.options.partnerKey
+        ].join('&');
+        return crypto_1.default.createHmac('sha256', Buffer.from(key, 'latin1')).update(Buffer.from(message, 'latin1')).digest('hex');
     };
     NetvisorApiClient.prototype._generateHeaders = function (url, params) {
         var headers = {
+            'Content-Type': 'text/plain',
             'X-Netvisor-Authentication-Sender': this.options.integrationName,
             'X-Netvisor-Authentication-CustomerId': this.options.customerId,
             'X-Netvisor-Authentication-PartnerId': this.options.partnerId,
-            'X-Netvisor-Authentication-Timestamp': (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss.SSS'),
-            'X-Netvisor-Authentication-TransactionId': crypto_1.default.randomBytes(32).toString('hex').substring(0, 16),
+            'X-Netvisor-Authentication-Timestamp': new Date().toISOString().replace('T', ' ').replace('Z', ''),
+            'X-Netvisor-Authentication-TimestampUnix': Math.floor(Date.now() / 1000).toString(),
+            'X-Netvisor-Authentication-TransactionId': Date.now().toString() + crypto_1.default.randomBytes(32).toString('hex').substring(0, 16),
             'X-Netvisor-Interface-Language': this.options.language,
             'X-Netvisor-Organisation-ID': this.options.organizationId,
-            'X-Netvisor-Authentication-MACHashCalculationAlgorithm': 'SHA256',
-            'Content-Type': 'text/xml'
+            'X-Netvisor-Authentication-UseHTTPResponseStatusCodes': '1',
+            'X-Netvisor-Authentication-MACHashCalculationAlgorithm': 'HMACSHA256'
         };
         if (params) {
             var queryString = Object.keys(params)
